@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Speaking Coach</title>
+<meta name="description" content="Record or upload a short speech and get feedback on filler words, speaking pace, pauses and more.">
+<meta name="theme-color" content="#1b1f45">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%A4%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+<script src="/static/app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+
+  <aside id="sidebar" class="side" aria-label="Settings">
+    <div class="side-head">
+      <a class="brand" href="/" aria-label="Speaking Coach home">
+        <span class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4"/></svg></span>
+        <span class="brand-text"><b>Speaking Coach</b><small>Pace, fillers and pauses</small></span>
+      </a>
+      <button id="sideClose" class="icon-btn side-close" type="button" aria-label="Close settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    <div class="side-body">
+      <section class="group" aria-labelledby="g-prefs">
+        <h2 id="g-prefs">Preferences</h2>
+
+        <div class="field">
+          <label for="model">Whisper model</label>
+          <select id="model">
+            <option value="tiny">Tiny: fastest</option>
+            <option value="base">Base: balanced</option>
+            <option value="small">Small: most accurate</option>
+          </select>
+          <p class="hint">Larger models transcribe more accurately but take longer.</p>
+        </div>
+
+        <fieldset class="field">
+          <legend>Appearance</legend>
+          <div class="seg">
+            <label><input type="radio" name="theme" value="auto"><span>Auto</span></label>
+            <label><input type="radio" name="theme" value="light"><span>Light</span></label>
+            <label><input type="radio" name="theme" value="dark"><span>Dark</span></label>
+          </div>
+        </fieldset>
+
+        <label class="switch">
+          <input type="checkbox" id="saveHist">
+          <span class="sw-text"><strong>Save my sessions</strong><small>Scores and counts stay in this browser. Audio is never saved.</small></span>
+          <span class="track" aria-hidden="true"></span>
+        </label>
+      </section>
+
+      <section class="group" aria-labelledby="g-pace">
+        <h2 id="g-pace">Target pace</h2>
+        <p class="pace-val">120–160 <span>words per minute</span></p>
+        <div class="pace-bar" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="pace-scale" aria-hidden="true"><span>Too slow</span><span>Ideal</span><span>Too fast</span></div>
+      </section>
+
+      <section class="group" aria-labelledby="g-help">
+        <h2 id="g-help">Help</h2>
+        <details>
+          <summary>Tips for a good recording</summary>
+          <ul>
+            <li>Sit in a quiet room, about a hand's length from the mic.</li>
+            <li>Speak naturally. Don't try to hide your usual habits.</li>
+            <li>Talk for 30 to 60 seconds on any topic.</li>
+            <li>Use headphones with a mic if your room echoes.</li>
+          </ul>
+        </details>
+        <details>
+          <summary>How your score works</summary>
+          <p>You start at 100. Points come off for a pace outside 120–160 WPM, filler words like "um" and "like", long pauses, repeated words and grammar slips. Use it to track progress, not as a grade.</p>
+        </details>
+        <details>
+          <summary>Your privacy</summary>
+          <p>Audio is sent to the server only to build your report, then deleted. Past sessions stay in this browser, and only you can see them.</p>
+        </details>
+      </section>
+    </div>
+
+    <div class="side-foot">
+      <div class="team">
+        <p class="team-title">Created by</p>
+        <ul class="creators">
+          <li>
+            <span class="avatar" aria-hidden="true">RI</span>
+            <p><strong>RI Students</strong><small>B.Tech Robotics &amp; AI, NMAM Institute of Technology</small></p>
+          </li>
+        </ul>
+        <button type="button" class="side-btn open-about">About the creators</button>
+      </div>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim" hidden></div>
+
+  <div class="page">
+    <header class="top">
+      <button id="menu" class="icon-btn" type="button" aria-label="Open settings" aria-controls="sidebar" aria-expanded="false">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <span class="top-title">Speaking Coach</span>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <h1>Find the habits that get in the way of your speaking.</h1>
+        <p>Record 30 to 60 seconds, or upload a clip. You'll get your pace, filler words, pauses and clear next steps.</p>
+      </section>
+
+      <div id="alert" class="alert" role="alert" hidden></div>
+
+      <div class="tabs" role="tablist" aria-label="Choose how to add speech">
+        <button role="tab" id="tab-record" aria-controls="panel-record" aria-selected="true" data-tab="record">Record</button>
+        <button role="tab" id="tab-upload" aria-controls="panel-upload" aria-selected="false" data-tab="upload" tabindex="-1">Upload</button>
+        <button role="tab" id="tab-progress" aria-controls="panel-progress" aria-selected="false" data-tab="progress" tabindex="-1">Progress</button>
+      </div>
+
+      <section id="panel-record" class="panel" role="tabpanel" aria-labelledby="tab-record">
+        <canvas id="wave" class="wave" height="110" aria-hidden="true"></canvas>
+        <div class="rec-row">
+          <button id="recBtn" class="rec" type="button" aria-label="Start recording"><span class="rec-ico"></span></button>
+          <div>
+            <p class="timer" id="timer" aria-live="off">0:00 <span>/ 1:00</span></p>
+            <p class="hint" id="recHint">Tap the red button and start talking. It stops by itself at 1 minute.</p>
+          </div>
+        </div>
+        <p class="topic">Need an idea? <strong id="topic"></strong> <button id="newTopic" class="link" type="button">Another topic</button></p>
+      </section>
+
+      <section id="panel-upload" class="panel" role="tabpanel" aria-labelledby="tab-upload" hidden>
+        <label class="drop" id="drop" for="file">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg>
+          <strong>Choose an audio file or drop it here</strong>
+          <span>WAV, MP3, M4A or OGG · up to 25 MB · up to 5 minutes</span>
+          <input id="file" type="file" accept="audio/*,.wav,.mp3,.m4a,.ogg">
+        </label>
+      </section>
+
+      <section id="panel-progress" class="panel" role="tabpanel" aria-labelledby="tab-progress" hidden>
+        <div id="histEmpty" class="empty">
+          <h2>No sessions yet</h2>
+          <p>Analyse a recording and it will show up here, so you can watch your habits improve.</p>
+          <button type="button" class="btn" id="goRecord">Record a speech</button>
+        </div>
+        <div id="histBody" hidden>
+          <div class="charts3">
+            <figure><figcaption>Score</figcaption><div id="hScore"></div></figure>
+            <figure><figcaption>Pace (WPM)</figcaption><div id="hWpm"></div></figure>
+            <figure><figcaption>Fillers per 100 words</figcaption><div id="hFill"></div></figure>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Date</th><th>Score</th><th>WPM</th><th>Fillers</th><th>Pauses</th><th>Length</th></tr></thead>
+              <tbody id="histRows"></tbody>
+            </table>
+          </div>
+          <button type="button" class="btn ghost danger" id="clearHist">Clear saved sessions</button>
+        </div>
+      </section>
+
+      <section id="ready" class="ready" hidden aria-live="polite">
+        <div class="ready-info">
+          <p><strong id="clipName"></strong> <span id="clipMeta"></span></p>
+          <audio id="player" controls preload="metadata"></audio>
+        </div>
+        <div class="ready-actions">
+          <button type="button" class="btn" id="analyze"><span class="spin" hidden></span><span id="analyzeLbl">Analyse speech</span></button>
+          <button type="button" class="btn ghost" id="discard">Start over</button>
+        </div>
+        <p class="hint" id="busyNote" hidden>Listening to your speech. The first run can take a minute while the model loads.</p>
+      </section>
+
+      <section id="results" class="results" hidden aria-labelledby="resTitle" tabindex="-1">
+        <h2 id="resTitle">Your results</h2>
+
+        <div class="summary">
+          <div class="ring">
+            <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="ring-bg" cx="60" cy="60" r="52"/><circle class="ring-fg" id="ringFg" cx="60" cy="60" r="52" transform="rotate(-90 60 60)"/></svg>
+            <div><b id="scoreNum">0</b><span>out of 100</span></div>
+          </div>
+          <div>
+            <p class="verdict" id="verdict"></p>
+            <p class="verdict-sub" id="verdictSub"></p>
+          </div>
+        </div>
+
+        <dl class="stats" id="stats"></dl>
+
+        <div class="two">
+          <div class="card good"><h3>What went well</h3><ul id="good"></ul></div>
+          <div class="card warn"><h3>What to work on</h3><ul id="bad"></ul></div>
+        </div>
+
+        <div class="card">
+          <h3>Transcript</h3>
+          <p class="transcript" id="transcript"></p>
+          <p class="legend"><mark class="f">filler word</mark> <mark class="r">repeated word</mark> <span class="pause">pause</span></p>
+        </div>
+
+        <div class="two">
+          <div class="card"><h3>Filler words</h3><div id="fillerChart"></div></div>
+          <div class="card"><h3>Speaking pace</h3><div id="paceChart"></div><p class="hint">Words per minute for each stretch of speech. The shaded band is the ideal range.</p></div>
+        </div>
+
+        <details class="card acc">
+          <summary>Language details</summary>
+          <div id="lang"></div>
+        </details>
+        <details class="card acc">
+          <summary>Grammar check</summary>
+          <div id="grammar"></div>
+        </details>
+
+        <button type="button" class="btn" id="again">Record another</button>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <p>© <span id="yr"></span> Speaking Coach · Version 1.0</p>
+      <p>Built with Whisper, NLTK and LanguageTool.</p>
+      <button type="button" class="link" id="openPrivacy">Privacy notice</button>
+    </footer>
+  </div>
+</div>
+
+<dialog id="about" aria-labelledby="aTitle">
+  <h2 id="aTitle">About the creators</h2>
+  <p><strong>Aditya Prabhu, Darshan Poojary, Varun Bhat</strong><br>Final-year B.Tech student in Robotics and Artificial Intelligence, NMAM Institute of Technology, Nitte (2023–2027).</p>
+  <p>Speaking Coach is a project that turns a short recording into feedback on pace, filler words, pauses and grammar.</p>
+  <p class="links">
+    <a href="dummy.com" target="_blank" rel="noopener">Portfolio</a> ·
+    <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+  </p>
+  <button type="button" class="btn" id="closeAbout">Close</button>
+</dialog>
+
+<dialog id="privacy" aria-labelledby="pTitle">
+  <h2 id="pTitle">Privacy notice</h2>
+  <p>Your audio is uploaded over your connection to this app's server, turned into text and measurements, and then deleted. We don't keep recordings or transcripts.</p>
+  <p>If you turn on "Save my sessions", scores and counts (not audio or text) are stored in this browser only. Clear them any time from the Progress tab.</p>
+  <button type="button" class="btn" id="closePrivacy">Close</button>
+</dialog>
+</body>
+</html>
